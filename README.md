@@ -145,6 +145,8 @@ Including:
 
 (https://htmlpreview.github.io/?https://github.com/vinodsinghjnu/ReadsClasification_NextFlow_Readme/blob/main/COLO829BL_test_th10_CellFrac_SunBurstPlot.html)
 
+<a href="https://htmlpreview.github.io/?https://github.com/vinodsinghjnu/ReadsClasification_NextFlow_Readme/blob/main/COLO829BL_test_th10_CellFrac_SunBurstPlot.html" target="_blank" rel="noopener noreferrer">👉 <b>Click here to view the Interactive HTML Sunburst Plot!</b></a>
+
 ![Cell Fraction Animation](CellsFrac.gif)
 
 
