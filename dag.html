@@ -1,0 +1,121 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+<title>Pipeline DAG</title>
+</head>
+<body>
+
+<pre class="mermaid" style="text-align: center;">
+%%{
+  init: {
+    'theme': 'base',
+    'themeVariables': {
+      'primaryColor': '#B6ECE2',
+      'primaryTextColor': '#160F26',
+      'primaryBorderColor': '#065647',
+      'lineColor': '#545555',
+      'clusterBkg': '#BABCBD22',
+      'clusterBorder': '#DDDEDE',
+      'fontFamily': 'arial'
+    }
+  }
+}%%
+flowchart TB
+
+    %% =============================
+    %% Class definitions
+    %% =============================
+    classDef optionalInput stroke:#B0B0B0,stroke-dasharray:5 5,color:#9A9A9A,fill:#F6F6F6;
+
+    %% =============================
+    %% Input Files
+    %% =============================
+    subgraph "Input Files"
+        v0["BAM Path list (CSV)<br/>sampleID,bam<br/>BamID,xxx.bam"]
+
+        v6["ref (hg38)"]
+        v12["train_data"]
+        v13["ref_fasta"]
+        v17["cell_type_groups"]
+        v20["SamplesClustering_nodes_xlsx"]
+    end
+
+    %% Apply dashed/light-gray style
+    class v6,v12,v13,v17,v20 optionalInput;
+
+    %% =============================
+    %% Process Nodes
+    %% =============================
+    v3["01_split_bam.sh<br/><span style='color:red; font-size:13px'>Process: split_bam</span>"]
+
+    v7["02_MethyperCpG_forLongReads.py<br/><span style='color:red; font-size:13px'>Process: MethyperCpG_forReads_chunk</span>"]
+
+    v8["03a_Generate_MethyFreqTable.py<br/><span style='color:red; font-size:13px'>Process: generate_methy_freq_table</span>"]
+
+    v9["03b_GA_ParametersEstimation.R<br/><span style='color:red; font-size:13px'>Process: estimate_parameters</span>"]
+
+    v14["04_Reads_likelihood_InTissueCellTypes.py<br/><span style='color:red; font-size:13px'>Process: calculate_reads_likelihood</span>"]
+
+    v16["merge_likelihood_results<br/><span style='color:red; font-size:13px'>Process: merge_likelihood_results</span>"]
+
+    v18["05_ReadsClassification.R<br/><span style='color:red; font-size:13px'>Process: reads_classification</span>"]
+
+    v21["06_CellTypeFraction_SunburstPlot.R<br/><span style='color:red; font-size:13px'>Process: cellType_FractionPlots</span>"]
+
+
+
+    %% =============================
+    %% Output Files
+    %% =============================
+    subgraph "Output Files"
+        v10["Methylated and Unmethylated component beta parameters"]
+        v19["TSV files: <br/> Reads assigned to originn cell-types at multiple lldiff thresholds"]
+        v22["Sunburst Plots<br/>(celltype specific reads fractions)"]
+    end
+
+    %% =============================
+    %% Data Channel Nodes
+    %% =============================
+    v1(( ))
+    v4(( ))
+    v11(( ))
+    v15(( ))
+
+    %% =============================
+    %% Connections
+    %% =============================
+    v0 --> v1
+    v1 --> v3
+    v3 --> v8
+    v3 --> v4
+    v6 --> v7
+    v4 --> v7
+    v7 --> v11
+    v8 --> v9
+    v9 --> v10
+    v9 --> v11
+    v12 --> v14
+    v13 --> v14
+    v11 --> v14
+    v14 --> v15
+    v15 --> v16
+    v16 --> v18
+    v17 --> v18
+    v18 --> v19
+    v18 --> v21
+    v20 --> v21
+    v21 --> v22
+
+</pre>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    maxTextSize: Number.MAX_SAFE_INTEGER,
+    maxEdges: Number.MAX_SAFE_INTEGER
+  });
+</script>
+
+</body>
+</html>
