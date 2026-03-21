@@ -115,8 +115,11 @@ The pipeline automatically handles the following steps in sequence:
 7. **`reads_classification`**: Classifies reads into cell types mapped against a provided hierarchical tree (`05_ReadsClassification.R`).
 8. **`cellType_FractionPlots`**: Generates interactive HTML Sunburst plots showing compositional cell type fractions at various hard threshold cutoffs (`06_CellTypeFraction_SunburstPlot.py`).
 
-
+<!-- 
 <iframe src="dag.html" width="100%" height="800px" frameborder="0" style="border:none;"></iframe>
+-->
+
+<a href="https://htmlpreview.github.io/?https://github.com/vinodsinghjnu/ReadsClasification_NextFlow_Readme/blob/main/dag.html" target="_blank" rel="noopener noreferrer">👉 <b>Click here to view the Interactive HTML Sunburst Plot!</b></a>
 
 
 ### 🛠 Resource & Error Management
