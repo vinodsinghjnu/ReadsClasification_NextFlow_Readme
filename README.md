@@ -137,8 +137,11 @@ Including:
 - `05_ReadsClassification/`: Merged likelihoods and Final tissue/cell-type fraction assignments.
 - `06_CellFraction_SunburstPlots_from_FinalOutput/`: Interactive HTML Sunburst plots showing the fraction of cell-type specific reads.
 
+<!-- 
+ <iframe src="COLO829BL_test_th10_CellFrac_SunBurstPlot.html" width="100%" height="800px" frameborder="0" style="border:none;"></iframe>
+-->
 
-<iframe src="COLO829BL_test_th10_CellFrac_SunBurstPlot.html" width="100%" height="800px" frameborder="0" style="border:none;"></iframe>
+[👉 **Click here to download and open the Interactive HTML Sunburst Plot!**](COLO829BL_test_th10_CellFrac_SunBurstPlot.html)
 
 ![Cell Fraction Animation](CellsFrac.gif)
 
