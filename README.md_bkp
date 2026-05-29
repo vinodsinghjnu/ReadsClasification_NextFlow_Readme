@@ -68,11 +68,11 @@ sample2,/full/path/to/sample2.bam
 
 ⸻
 
-📚 Reference & Training Data for hg38 (already present in : `assets/` directory, no need to mention in input command)
+📚 Reference & Training Data (already present in : `assets/` directory, no need to mention in input command)
 
 The following reference and training files are bundled with the pipeline (assets/ directory):
 
-- Training methylation counts data per CpG site (Zarr format) for hg38 :
+- Training methylation counts data per CpG site (Zarr format) :
 ` ThirtyThreeTissues_75SubCells_Mh_Binomial_parameters_Cov.gt5.sorted.bed.zarr `
 - Cell-type clustering metadata (Excel file) :
 `nodes_with_leaves_mannual.xlsx`
@@ -80,16 +80,32 @@ The following reference and training files are bundled with the pipeline (assets
 `GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta`
 
 
-No additional downloads are required, if you use same setup (training methylation data + hirarchial clustering of celltypes ) used in for our publication .
+No additional downloads are required.
 
-### Training data formats
+⸻
 
-- Training methylation counts data per CpG site (Zarr format) :
-The training data is in Zarr format, which is a format for storing chunked, compressed N-dimensional arrays. It is a binary format and is not human-readable.  The file used to create the Zarr file is `ThirtyThreeTissues_75SubCells_Mh_Binomial_parameters_Cov.gt5.sorted.bed.gz` using `bin/bed_to_zarr.py`script and sample of this file (first 5 rows) is given below:
+## ⚙️ Execution Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|:--------:|-------------|
+| `--input` | File | ✅ Yes | Path to your metadata CSV file. |
+| `--genomeAssembly` | String | ✅ Yes | genome assembly name (e.g., `hg38`, `hg19`). default: `hg38` |
+| `--trainData` | File | ✅ Yes | Path to training data for the hg38 genome assembly celltypes (zarr format), default: `assets/training_data/ThirtyThreeTissues_75SubCells_Mh_Binomial_parameters_Cov.gt5.sorted.bed.zarr` |
+| `--CellTypeGroupsFile` | File | ✅ Yes | Path to methylation based cell type groups file (Excel format), default: `assets/methylation_clustering/nodes_with_leaves_mannual.xlsx` |
+| `--genomeFasta` | File | ✅ Yes | Path to reference hg38 genome FASTA file, default: `assets/references/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta` |
+| `-resume` |  | Optional | resume the previous job, if it stopped due  to some  reasons|
+| `-profile` | String | Optional | Execution profile to use: `slurm`, `pbs`, or `local`. |
+| `--account` | String | Optional | HPC allocation (project handle) account (e.g., `--account myproject`). |
+| `--outputDir` | Path | Optional | Output directory. Defaults to `${projectDir}/results`. |
+| `--email` | String | Optional | Email address for run completion/failure notifications. |
+
+**NOTE 1:** If you are running this pipeline for the first time, you need to create a new directory for each run. This is because Nextflow creates a `work/` directory in the current directory, and if you run the pipeline multiple times in the same directory, it will create a new `work/` directory each time, which can cause conflicts.
+
+**NOTE 2:** The training data is in Zarr format, which is a format for storing chunked, compressed N-dimensional arrays. It is a binary format and is not human-readable.  The file used to create the Zarr file is `ThirtyThreeTissues_75SubCells_Mh_Binomial_parameters_Cov.gt5.sorted.bed.gz` using `bin/bed_to_zarr.py`script.
+Sample of `ThirtyThreeTissues_75SubCells_Mh_Binomial_parameters_Cov.gt5.sorted.bed.gz` first 5 rows:
 
 ```console
->> zcat pathTo/ThirtyThreeTissues_75SubCells_Mh_Binomial_parameters_Cov.gt5.sorted.bed.gz | head -n5 | awk '{print $1, $2, $3, $4, $5, $6, $7, $8}' | column -t
-
+zcat pathTo/ThirtyThreeTissues_75SubCells_Mh_Binomial_parameters_Cov.gt5.sorted.bed.gz | head -n5 | awk '{print $1, $2, $3, $4, $5, $6, $7, $8}' | column -t
 #chrom  start  end    CpG_ind  Adipocytes-FatCells  Aorta-Endothel  Aorta-SmoothMuscle  Bladder-Epithelial
 chr1    10562  10563  9        47:12                15:2            10:5                53:14
 chr1    10570  10571  10       50:11                15:1            13:4                63:5
@@ -97,53 +113,6 @@ chr1    10576  10577  11       36:25                16:0            12:7        
 chr1    10578  10579  12       33:32                10:6            11:7                49:19
 
 ```
-
-- Cell-type clustering metadata (Excel file) :
-
-
-⸻
-
-## ⚙️ Execution Parameters
-
-### **Help** 
-```console
-nextflow run main.nf --help
-```
-
-### 1. Essential Parameters
-These parameters are **required** for every run. The pipeline cannot start without a valid input file.
-
-
-| Parameter | Type | Required | Description |
-| :--- | :--- | :---: | :--- |
-| `--input` | File | ✅ Yes | Path to your metadata CSV file. |
-
-### 2. Default Reference Parameters
-These are **required** but come with pre-configured defaults. You only need to specify these if you are using custom reference files or a different genome assembly.
-
-
-| Parameter | Type | Default Value | Description |
-| :--- | :--- | :--- | :--- |
-| `--genomeAssembly` | String | `hg38` | Genome assembly name (e.g., `hg38`, `hg19`). |
-| `--trainData` | File | `assets/training_data/...` | Path to training data (zarr format) for hg38 cell types. |
-| `--CellTypeGroupsFile` | File | `assets/methylation/...` | Path to methylation-based cell type groups file (Excel). |
-| `--genomeFasta` | File | `assets/references/...` | Path to reference hg38 genome FASTA file. |
-
-### 3. Optional Parameters
-These parameters are **optional**. Use them to control where the pipeline runs, where it saves data, and how it notifies you.
-
-
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `-resume` | Flag | Resumes the previous job if it stopped due to an error or interruption. |
-| `-profile` | String | Execution profile to use: `slurm`, `pbs`, or `local`. |
-| `--account` | String | HPC allocation/project handle (e.g., `--account myproject`). |
-| `--outputDir` | Path | Output directory. Defaults to `${projectDir}/results`. |
-| `--email` | String | Email address for run completion/failure notifications. |
-
-
-**NOTE :** If you are running this pipeline for the first time, you need to create a new directory for each run. This is because Nextflow creates a `work/` directory in the current directory, and if you run the pipeline multiple times in the same directory, it will create a new `work/` directory each time, which can cause conflicts.
-
 
 ⸻
 
@@ -174,7 +143,6 @@ Recommended for:
         
 ⸻
 
-
 #### **Local execution (Testing)**
 ```console
 nextflow run main.nf --input data/example/samples.csv
@@ -185,7 +153,6 @@ nextflow run main.nf --input data/example/samples.csv
 nextflow run main.nf \
   -profile slurm \
   --input data/example/samples.csv \
-  --outputDir pathTo/outDir \
   --account myproject \
   --email user@email.com
 ```
@@ -195,7 +162,6 @@ sbatch --time=30:00:00  submit.sh  \
   nextflow run main.nf  \
     -profile slurm -resume \
     --input data/example/samples.csv \
-    --outputDir pathTo/outDir \
     --account myproject \
     --email user@email.com
 ```
@@ -227,66 +193,6 @@ nextflow run /home/user/readsClassification_nextflow/main.nf -profile ..
 
 Note: 
 While the launch directories must be different, multiple runs can safely share the same `work/` directory. You can specify this using -w `/path/to/work`
-
-### Utility Functions
-
-#### **Extract classified Reads** 
-
-Filter classified reads by log-likelihood difference threshold and/or by cell type or tissue type or by custom groups.
-
-**Help**
-```console
-nextflow run main.nf -entry EXTRACT_READS --help
-```
-
-**Example**
-```console
-nextflow run main.nf \
-  -profile slurm \
-  -entry EXTRACT_READS \
-  --input_dir <path (required): pathTo/sample/05_ReadsClassification/FracVsThresh/> \
-  --threshold <Integer (default: 10)> \
-  --group <name (default: Somatic)> \
-  --outdir <path (required)> \
-  --nodefile <path (default: assets/methylation_clustering/nodes_with_leaves_mannual.xlsx)> \
-  --account <project account (optional)> \
-  --email <email (optional)>
-```
-
-
-#### **Preprocessing of training data (Optional)** 
-
-Use only if custom training data is used.
-
-**Help**
-```console
-nextflow run main.nf -entry PREPARE_ZARR --help
-```
-
-**Example**
-```console
-nextflow run main.nf \
-  -profile slurm \
-  -entry PREPARE_ZARR \
-  --bed <path> \
-  --zarr_out <path> \
-  --account <project account (optional)> \
-  --email <email (optional)>
-```
-
-**Example input BED file format (`--bed`):**
-```tsv
-#chrom  start  end    CpG_ind  Adipocytes-FatCells  Sperm-spermatids
-chr1    10562  10563  9        47:12                0:34
-chr1    10570  10571  10       50:11                2:34
-chr1    10576  10577  11       36:25                0:37
-chr1    10578  10579  12       33:32                0:35
-chr1    10588  10589  13       54:13                3:24
-chr1    10608  10609  14       64:12                1:33
-chr1    10616  10617  15       68:8                 0:32
-chr1    10649  10650  23       58:13                4:59
-chr1    10659  10660  24       61:15                2:62
-```
 
 
 ⸻
