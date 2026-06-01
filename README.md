@@ -133,6 +133,7 @@ These are **required** but come with pre-configured defaults. You only need to s
 These parameters are **optional**. Use them to control where the pipeline runs, where it saves data, and how it notifies you.
 
 
+
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `-resume` | Flag | Resumes the previous job if it stopped due to an error or interruption. |
@@ -140,6 +141,21 @@ These parameters are **optional**. Use them to control where the pipeline runs, 
 | `--account` | String | HPC allocation/project handle (e.g., `--account myproject`). |
 | `--outputDir` | Path | Output directory. Defaults to `${projectDir}/results`. |
 | `--email` | String | Email address for run completion/failure notifications. |
+
+
+### 4. Nextflow Core Options
+Standard Nextflow command-line options (passed to `nextflow run`) can also be used:
+
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `-w` / `-work-dir` | Path | Specify the directory where intermediate workflow files are stored (defaults to `./work`). |
+| `-c` | File | Add a custom configuration file to the run. |
+| `-bg` | Flag | Run Nextflow in the background. |
+
+For a complete list of core Nextflow options, you can run:
+```console
+nextflow run -h
+```
 
 
 **NOTE :** If you are running this pipeline for the first time, you need to create a new directory for each run. This is because Nextflow creates a `work/` directory in the current directory, and if you run the pipeline multiple times in the same directory, it will create a new `work/` directory each time, which can cause conflicts.
@@ -226,7 +242,7 @@ nextflow run /home/user/readsClassification_nextflow/main.nf -profile ..
 ```
 
 Note: 
-While the launch directories must be different, multiple runs can safely share the same `work/` directory. You can specify this using -w `/path/to/work`
+While the launch directories must be different, multiple runs can safely share the same `work/` directory. You can specify this using the Nextflow option `-w` or `-work-dir` (e.g., `-w /path/to/work`).
 
 ### Utility Functions
 

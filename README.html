@@ -378,6 +378,7 @@
 <li><a href="#1-essential-parameters">1. Essential Parameters</a></li>
 <li><a href="#2-default-reference-parameters">2. Default Reference Parameters</a></li>
 <li><a href="#3-optional-parameters">3. Optional Parameters</a></li>
+<li><a href="#4-nextflow-core-options">4. Nextflow Core Options</a></li>
 </ul>
 </li>
 <li><a href="#running-the-pipeline">▶️ Running the Pipeline</a><ul>
@@ -615,6 +616,37 @@ chr1    10578  10579  12       33:32                10:6            11:7        
 </tr>
 </tbody>
 </table>
+<h3 id="4-nextflow-core-options">4. Nextflow Core Options</h3>
+<p>Standard Nextflow command-line options (passed to <code>nextflow run</code>) can also be used:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>-w</code> / <code>-work-dir</code></td>
+<td style="text-align: left;">Path</td>
+<td style="text-align: left;">Specify the directory where intermediate workflow files are stored (defaults to <code>./work</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-c</code></td>
+<td style="text-align: left;">File</td>
+<td style="text-align: left;">Add a custom configuration file to the run.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-bg</code></td>
+<td style="text-align: left;">Flag</td>
+<td style="text-align: left;">Run Nextflow in the background.</td>
+</tr>
+</tbody>
+</table>
+<p>For a complete list of core Nextflow options, you can run:</p>
+<pre><code class="language-console">nextflow run -h
+</code></pre>
 <p><strong>NOTE :</strong> If you are running this pipeline for the first time, you need to create a new directory for each run. This is because Nextflow creates a <code>work/</code> directory in the current directory, and if you run the pipeline multiple times in the same directory, it will create a new <code>work/</code> directory each time, which can cause conflicts.</p>
 <p>⸻</p>
 <h2 id="running-the-pipeline">▶️ Running the Pipeline</h2>
@@ -676,7 +708,7 @@ cd runs/run2
 nextflow run /home/user/readsClassification_nextflow/main.nf -profile ..
 </code></pre>
 <p>Note: 
-While the launch directories must be different, multiple runs can safely share the same <code>work/</code> directory. You can specify this using -w <code>/path/to/work</code></p>
+While the launch directories must be different, multiple runs can safely share the same <code>work/</code> directory. You can specify this using the Nextflow option <code>-w</code> or <code>-work-dir</code> (e.g., <code>-w /path/to/work</code>).</p>
 <h3 id="utility-functions">Utility Functions</h3>
 <h4 id="extract-classified-reads"><strong>Extract classified Reads</strong></h4>
 <p>Filter classified reads by log-likelihood difference threshold and/or by cell type or tissue type or by custom groups.</p>
