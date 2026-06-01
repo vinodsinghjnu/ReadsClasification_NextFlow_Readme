@@ -158,9 +158,6 @@ nextflow run -h
 ```
 
 
-**NOTE :** If you are running this pipeline for the first time, you need to create a new directory for each run. This is because Nextflow creates a `work/` directory in the current directory, and if you run the pipeline multiple times in the same directory, it will create a new `work/` directory each time, which can cause conflicts.
-
-
 ⸻
 
 ## ▶️ Running the Pipeline
@@ -226,7 +223,9 @@ nextflow run main.nf \
 
 ### How to Run Jobs Concurrently
 
-To run multiple jobs at once, you must use separate launch directories for each run. 
+Nextflow creates a default `work/` directory in the current directory, and if you run the pipeline multiple times simultaniously in the same directory, it will create a new `work/` directory each time, which can cause conflicts. This conflicts can be avoided by any of the below options:
+
+#### **Option 1: Using separate launch directories for each run.**
 
 ```console
 # Create separate environments
@@ -234,15 +233,22 @@ mkdir -p runs/run1 runs/run2
 
 # Start first job (Terminal 1)
 cd runs/run1
-nextflow run /home/user/readsClassification_nextflow/main.nf -profile ...
+nextflow run /path/to/main.nf -profile ..
 
 # Start second job (Terminal 2)
 cd runs/run2
-nextflow run /home/user/readsClassification_nextflow/main.nf -profile ..
+nextflow run /path/to/main.nf -profile ..
 ```
 
-Note: 
-While the launch directories must be different, multiple runs can safely share the same `work/` directory. You can specify this using the Nextflow option `-w` or `-work-dir` (e.g., `-w /path/to/work`).
+#### **Option 2: Using separate work directories for each run.**
+
+Specify a different work directory using the `-w` or `-work-dir` option. 
+
+For example:
+```console
+nextflow run /path/to/main.nf -w work1 ...
+nextflow run /path/to/main.nf -w work2 ...
+```
 
 ### Utility Functions
 

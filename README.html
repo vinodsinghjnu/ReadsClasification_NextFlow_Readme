@@ -387,7 +387,11 @@
 <li><a href="#local-execution-testing">Local execution (Testing)</a></li>
 <li><a href="#slurm-cluster-production">Slurm Cluster (Production)</a></li>
 <li><a href="#pbs-cluster-testing">PBS Cluster (Testing)</a></li>
-<li><a href="#how-to-run-jobs-concurrently">How to Run Jobs Concurrently</a></li>
+<li><a href="#how-to-run-jobs-concurrently">How to Run Jobs Concurrently</a><ul>
+<li><a href="#option-1-using-separate-launch-directories-for-each-run">Option 1: Using separate launch directories for each run.</a></li>
+<li><a href="#option-2-using-separate-work-directories-for-each-run">Option 2: Using separate work directories for each run.</a></li>
+</ul>
+</li>
 <li><a href="#utility-functions">Utility Functions</a><ul>
 <li><a href="#extract-classified-reads">Extract classified Reads</a></li>
 <li><a href="#preprocessing-of-training-data-optional">Preprocessing of training data (Optional)</a></li>
@@ -647,7 +651,6 @@ chr1    10578  10579  12       33:32                10:6            11:7        
 <p>For a complete list of core Nextflow options, you can run:</p>
 <pre><code class="language-console">nextflow run -h
 </code></pre>
-<p><strong>NOTE :</strong> If you are running this pipeline for the first time, you need to create a new directory for each run. This is because Nextflow creates a <code>work/</code> directory in the current directory, and if you run the pipeline multiple times in the same directory, it will create a new <code>work/</code> directory each time, which can cause conflicts.</p>
 <p>⸻</p>
 <h2 id="running-the-pipeline">▶️ Running the Pipeline</h2>
 <h4 id="containerized-execution-recommended">🧱 Containerized Execution (Recommended)</h4>
@@ -695,20 +698,25 @@ chr1    10578  10579  12       33:32                10:6            11:7        
   --email user@email.com
 </code></pre>
 <h3 id="how-to-run-jobs-concurrently">How to Run Jobs Concurrently</h3>
-<p>To run multiple jobs at once, you must use separate launch directories for each run. </p>
+<p>Nextflow creates a default <code>work/</code> directory in the current directory, and if you run the pipeline multiple times simultaniously in the same directory, it will create a new <code>work/</code> directory each time, which can cause conflicts. This conflicts can be avoided by any of the below options:</p>
+<h4 id="option-1-using-separate-launch-directories-for-each-run"><strong>Option 1: Using separate launch directories for each run.</strong></h4>
 <pre><code class="language-console"># Create separate environments
 mkdir -p runs/run1 runs/run2
 
 # Start first job (Terminal 1)
 cd runs/run1
-nextflow run /home/user/readsClassification_nextflow/main.nf -profile ...
+nextflow run /path/to/main.nf -profile ..
 
 # Start second job (Terminal 2)
 cd runs/run2
-nextflow run /home/user/readsClassification_nextflow/main.nf -profile ..
+nextflow run /path/to/main.nf -profile ..
 </code></pre>
-<p>Note: 
-While the launch directories must be different, multiple runs can safely share the same <code>work/</code> directory. You can specify this using the Nextflow option <code>-w</code> or <code>-work-dir</code> (e.g., <code>-w /path/to/work</code>).</p>
+<h4 id="option-2-using-separate-work-directories-for-each-run"><strong>Option 2: Using separate work directories for each run.</strong></h4>
+<p>Specify a different work directory using the <code>-w</code> or <code>-work-dir</code> option. </p>
+<p>For example:</p>
+<pre><code class="language-console">nextflow run /path/to/main.nf -w work1 ...
+nextflow run /path/to/main.nf -w work2 ...
+</code></pre>
 <h3 id="utility-functions">Utility Functions</h3>
 <h4 id="extract-classified-reads"><strong>Extract classified Reads</strong></h4>
 <p>Filter classified reads by log-likelihood difference threshold and/or by cell type or tissue type or by custom groups.</p>
