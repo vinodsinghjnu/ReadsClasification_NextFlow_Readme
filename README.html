@@ -387,11 +387,7 @@
 <li><a href="#local-execution-testing">Local execution (Testing)</a></li>
 <li><a href="#slurm-cluster-production">Slurm Cluster (Production)</a></li>
 <li><a href="#pbs-cluster-testing">PBS Cluster (Testing)</a></li>
-<li><a href="#how-to-run-jobs-concurrently">How to Run Jobs Concurrently</a><ul>
-<li><a href="#option-1-using-separate-launch-directories-for-each-run">Option 1: Using separate launch directories for each run.</a></li>
-<li><a href="#option-2-using-separate-work-directories-for-each-run">Option 2: Using separate work directories for each run.</a></li>
-</ul>
-</li>
+<li><a href="#how-to-run-jobs-concurrently">How to Run Jobs Concurrently</a></li>
 <li><a href="#utility-functions">Utility Functions</a><ul>
 <li><a href="#extract-classified-reads">Extract classified Reads</a></li>
 <li><a href="#preprocessing-of-training-data-optional">Preprocessing of training data (Optional)</a></li>
@@ -698,8 +694,8 @@ chr1    10578  10579  12       33:32                10:6            11:7        
   --email user@email.com
 </code></pre>
 <h3 id="how-to-run-jobs-concurrently">How to Run Jobs Concurrently</h3>
-<p>Nextflow creates a default <code>work/</code> directory in the current directory, and if you run the pipeline multiple times simultaniously in the same directory, it will create a new <code>work/</code> directory each time, which can cause conflicts. This conflicts can be avoided by any of the below options:</p>
-<h4 id="option-1-using-separate-launch-directories-for-each-run"><strong>Option 1: Using separate launch directories for each run.</strong></h4>
+<p>Nextflow creates a default <code>work/</code> directory in the current directory, and if you run the pipeline multiple times simultaniously in the same directory, it will create a new <code>work/</code> directory each run, which can cause conflicts. These conflicts can be avoided by any of the below options:</p>
+<p><strong>Option 1: Using separate launch directories for each run.</strong></p>
 <pre><code class="language-console"># Create separate environments
 mkdir -p runs/run1 runs/run2
 
@@ -711,7 +707,7 @@ nextflow run /path/to/main.nf -profile ..
 cd runs/run2
 nextflow run /path/to/main.nf -profile ..
 </code></pre>
-<h4 id="option-2-using-separate-work-directories-for-each-run"><strong>Option 2: Using separate work directories for each run.</strong></h4>
+<p><strong>Option 2: Using separate work directories for each run.</strong></p>
 <p>Specify a different work directory using the <code>-w</code> or <code>-work-dir</code> option. </p>
 <p>For example:</p>
 <pre><code class="language-console">nextflow run /path/to/main.nf -w work1 ...
