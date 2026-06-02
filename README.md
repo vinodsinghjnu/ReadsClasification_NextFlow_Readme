@@ -223,9 +223,9 @@ nextflow run main.nf \
 
 ### How to Run Jobs Concurrently
 
-Nextflow creates a default `work/` directory in the current directory, and if you run the pipeline multiple times simultaniously in the same directory, it will create a new `work/` directory each time, which can cause conflicts. This conflicts can be avoided by any of the below options:
+Nextflow creates a default `work/` directory in the current directory, and if you run the pipeline multiple times simultaniously in the same directory, it will create a new `work/` directory each run, which can cause conflicts. These conflicts can be avoided by any of the below options:
 
-#### **Option 1: Using separate launch directories for each run.**
+**Option 1: Using separate launch directories for each run.**
 
 ```console
 # Create separate environments
@@ -240,7 +240,7 @@ cd runs/run2
 nextflow run /path/to/main.nf -profile ..
 ```
 
-#### **Option 2: Using separate work directories for each run.**
+**Option 2: Using separate work directories for each run.**
 
 Specify a different work directory using the `-w` or `-work-dir` option. 
 
